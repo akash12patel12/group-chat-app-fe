@@ -12,3 +12,18 @@ async function register(e){
     alert(err.response.data.errorMsg);
    })
 }
+
+function enablelogin(e){
+  e.preventDefault();
+ document.getElementById('login-form').style.display = 'block';
+ document.getElementById('register-form').style.display = 'none';
+
+}
+
+function enableregister(e){
+  e.preventDefault();
+  document.getElementById('register-form').style.display = 'block'
+  document.getElementById('login-form').style.display = 'none'
+
+}
+
