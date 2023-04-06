@@ -27,3 +27,8 @@ function enableregister(e){
 
 }
 
+function login(e){
+  e.preventDefault();
+  axios.post(`${apiurl}/login`, {"email" :e.target.email.value, "password" : e.target.password.value});
+}
+
