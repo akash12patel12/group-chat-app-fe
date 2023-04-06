@@ -29,6 +29,23 @@ function enableregister(e){
 
 function login(e){
   e.preventDefault();
-  axios.post(`${apiurl}/login`, {"email" :e.target.email.value, "password" : e.target.password.value});
+  axios.post(`${apiurl}/login`, {"email" :e.target.email.value, "password" : e.target.password.value}).then(res=>{
+    alert('Logged In Successfully');
+    const token = res.data.token;
+    localStorage.setItem("token", token);
+    window.location.href = "chat.html";
+  }).catch(err=>{
+    // console.log();
+    if(err.response.status === 401){
+      alert('Password Is Incorrect!');
+    }
+    else if(err.response.status === 404){
+      alert('No User Found!');
+    }
+    else {
+      alert('Some Error Occured!');
+
+    }
+  });
 }
 
