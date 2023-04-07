@@ -19,3 +19,28 @@ function logOut(e) {
     localStorage.clear();
     window.location.href = "login.html";
 }
+var pane = document.getElementById('chat-table');
+pane.scrollTop = pane.offsetHeight;
+function sendm(e){
+    e.preventDefault();
+    // console.log("called");
+    axios.post(`${url}/send`, { message : e.target.message.value}, config).then(data=>{
+      location.reload();
+    });
+    
+}
+
+function getall(){
+    axios.get(`${url}/getall`, config).then(messages=>{
+      const chattable = document.getElementById('chat-table');
+      chattable.innerHTML = "";
+       messages.data.forEach( async msg => {
+        chattable.innerHTML = chattable.innerHTML + `<tr><td>${msg.sender}</td><td>${msg.message}</td></tr>`
+       });
+    }).catch(err=>{
+      console.log(err);
+      alert('Something Went Wrong');
+    });
+}
+
+getall();
