@@ -19,8 +19,7 @@ function logOut(e) {
     localStorage.clear();
     window.location.href = "login.html";
 }
-var pane = document.getElementById('chat-table');
-pane.scrollTop = pane.offsetHeight;
+
 function sendm(e){
     e.preventDefault();
     // console.log("called");
@@ -31,12 +30,15 @@ function sendm(e){
 }
 
 function getall(){
-    axios.get(`${url}/getall`, config).then(messages=>{
-      const chattable = document.getElementById('chat-table');
-      chattable.innerHTML = "";
-       messages.data.forEach( async msg => {
-        chattable.innerHTML = chattable.innerHTML + `<tr><td>${msg.sender}</td><td>${msg.message}</td></tr>`
+    axios.get(`${url}/getall`, config).then(async messages=>{
+      const chatarea = document.getElementById('chat-area');
+      chatarea.innerHTML = "";
+      await messages.data.forEach( msg => {
+        chatarea.innerHTML = chatarea.innerHTML + `${msg.sender} : ${msg.message} <br>`
        });
+
+       var objDiv = document.getElementById("chat-area");
+       objDiv.scrollTop = objDiv.scrollHeight;
     }).catch(err=>{
       console.log(err);
       alert('Something Went Wrong');
@@ -44,3 +46,10 @@ function getall(){
 }
 
 getall();
+
+
+
+ 
+
+
+
