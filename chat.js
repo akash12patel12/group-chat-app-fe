@@ -7,18 +7,18 @@ const config = {
   };
 
 
-checkLogin();
-function checkLogin(){
-  if(!localStorage.getItem('token')){
-    window.location.href = "index.html";
-  }
-}
+// checkLogin();
+// function checkLogin(){
+//   if(!localStorage.getItem('token')){
+//     window.location.href = "index.html";
+//   }
+// }
 
-function logOut(e) {
-    e.preventDefault();
-    localStorage.clear();
-    window.location.href = "login.html";
-}
+// function logOut(e) {
+//     e.preventDefault();
+//     localStorage.clear();
+//     window.location.href = "login.html";
+// }
 
 function sendm(e){
     e.preventDefault();
@@ -45,7 +45,11 @@ function getall(){
     });
 }
 
-getall();
+// getall();
+
+
+// setTimeInterval(getall(), 1000);
+setInterval(function() {getall();}, 1000);
 
 
 
