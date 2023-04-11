@@ -29,27 +29,70 @@ function sendm(e){
     
 }
 
-function getall(){
-    axios.get(`${url}/getall`, config).then(async messages=>{
-      const chatarea = document.getElementById('chat-area');
-      chatarea.innerHTML = "";
-      await messages.data.forEach( msg => {
-        chatarea.innerHTML = chatarea.innerHTML + `${msg.sender} : ${msg.message} <br>`
-       });
+// function getall(){
+//     axios.get(`${url}/getall`, config).then(async messages=>{
+//       const chatarea = document.getElementById('chat-area');
+//       chatarea.innerHTML = "";
+//       await messages.data.forEach( msg => {
+//         chatarea.innerHTML = chatarea.innerHTML + `${msg.sender} : ${msg.message} <br>`
+//        });
 
-       var objDiv = document.getElementById("chat-area");
-       objDiv.scrollTop = objDiv.scrollHeight;
-    }).catch(err=>{
-      console.log(err);
-      alert('Something Went Wrong');
-    });
-}
+//        var objDiv = document.getElementById("chat-area");
+//        objDiv.scrollTop = objDiv.scrollHeight;
+//     }).catch(err=>{
+//       console.log(err);
+//       alert('Something Went Wrong');
+//     });
+// }
 
 // getall();
 
 
 // setTimeInterval(getall(), 1000);
-setInterval(function() {getall();}, 1000);
+setInterval(function() {getMsgsFromLS();}, 1000);
+
+getMsgsFromLS();
+
+async function getMsgsFromLS(){
+    let success = await checkForNewMessages();
+    let messages = await localStorage.getItem('messages');
+     messages = JSON.parse(messages);
+    showMessages(messages);
+}
+
+async function checkForNewMessages(){
+  let currentMessages = await localStorage.getItem('messages');
+  let lastMsgId ;
+
+  if(!currentMessages){
+   let messages = await axios.get(`${url}/getLatestTenMessages`, config);
+   await localStorage.setItem('messages', JSON.stringify(messages.data));
+   return true;
+  }
+  else {
+    currentMessages = JSON.parse(currentMessages);
+    lastMsgId = currentMessages[currentMessages.length -1].id;
+  }
+  
+  let messages = await axios.get(`${url}/getLatestMessages?lastMsgId=${lastMsgId}`, config);
+  currentMessages = currentMessages.concat(messages.data);
+  currentMessages = currentMessages.slice(Math.max(currentMessages.length - 10, 0))
+  // console.log(currentMessages);
+  await localStorage.setItem('messages', JSON.stringify(currentMessages));
+  return true;
+}
+
+
+
+
+async function showMessages(messages){
+         const chatarea = document.getElementById('chat-area');
+          chatarea.innerHTML = "";
+          await messages.forEach( msg => {
+            chatarea.innerHTML = chatarea.innerHTML + `${msg.sender} : ${msg.message} <br>`
+           })
+  
+}
 
 
 
